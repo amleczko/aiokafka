@@ -530,8 +530,8 @@ class Fetcher:
         else:
             strategy = 'latest'
 
-        log.debug("Resetting offset for partition %s to %s offset.",
-                  partition, strategy)
+        log.info("Resetting offset for partition %s to %s offset.",
+                 partition, strategy)
         offset = yield from self._offset(partition, timestamp)
 
         # we might lose the assignment while fetching the offset,
@@ -579,11 +579,11 @@ class Fetcher:
         """
         node_id = self._client.cluster.leader_for_partition(partition)
         if node_id is None:
-            log.debug("Partition %s is unknown for fetching offset,"
-                      " wait for metadata refresh", partition)
+            log.info("Partition %s is unknown for fetching offset,"
+                     " wait for metadata refresh", partition)
             raise Errors.StaleMetadata(partition)
         elif node_id == -1:
-            log.debug(
+            log.info(
                 "Leader for partition %s unavailable for fetching offset,"
                 " wait for metadata refresh", partition)
             raise Errors.LeaderNotAvailableError(partition)
@@ -611,13 +611,13 @@ class Fetcher:
                 return -1
             assert len(offsets) == 1, 'Expected OffsetResponse with one offset'
             offset = offsets[0]
-            log.debug("Fetched offset %d for partition %s", offset, partition)
+            log.info("Fetched offset %d for partition %s", offset, partition)
             return offset
         elif error_type in (Errors.NotLeaderForPartitionError,
                             Errors.UnknownTopicOrPartitionError):
-            log.debug("Attempt to fetch offsets for partition %s failed due"
-                      " to obsolete leadership information, retrying.",
-                      partition)
+            log.info("Attempt to fetch offsets for partition %s failed due"
+                     " to obsolete leadership information, retrying.",
+                     partition)
             raise error_type(partition)
         else:
             log.warning(
