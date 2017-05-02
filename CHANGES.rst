@@ -1,6 +1,10 @@
 CHANGES
 --------
 
+0.3.0-SH (unreleased)
+---------------------
+* fix bug with offset reset [amleczko]
+
 0.2.2 (2017-04-17)
 ^^^^^^^^^^^^^^^^^^
 

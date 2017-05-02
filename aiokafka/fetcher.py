@@ -446,7 +446,7 @@ class Fetcher:
                 elif error_type is Errors.OffsetOutOfRangeError:
                     fetch_offset = fetch_offsets[tp]
                     if self._subscriptions.has_default_offset_reset_policy():
-                        self._subscriptions.need_offset_reset(tp)
+                        yield from self._reset_offset(tp)
                     else:
                         err = Errors.OffsetOutOfRangeError({tp: fetch_offset})
                         self._set_error(tp, err)
@@ -502,8 +502,8 @@ class Fetcher:
                 futures.append(self._reset_offset(tp))
             else:
                 committed = self._subscriptions.assignment[tp].committed
-                log.debug("Resetting offset for partition %s to the committed"
-                          " offset %s", tp, committed)
+                log.info("Resetting offset for partition %s to the committed"
+                         " offset %s", tp, committed)
                 self._subscriptions.seek(tp, committed)
 
         if futures:
