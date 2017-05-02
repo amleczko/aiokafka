@@ -502,8 +502,8 @@ class Fetcher:
                 futures.append(self._reset_offset(tp))
             else:
                 committed = self._subscriptions.assignment[tp].committed
-                log.debug("Resetting offset for partition %s to the committed"
-                          " offset %s", tp, committed)
+                log.info("Resetting offset for partition %s to the committed"
+                         " offset %s", tp, committed)
                 self._subscriptions.seek(tp, committed)
 
         if futures:
