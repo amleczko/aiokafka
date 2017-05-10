@@ -882,7 +882,7 @@ class CoordinatorGroupRebalance:
             log.debug(
                 "Attempt to join group %s failed due to unknown member id",
                 self.group_id)
-            return
+            raise
         except (Errors.GroupCoordinatorNotAvailableError,
                 Errors.NotCoordinatorForGroupError) as err:
             # re-discover the coordinator and retry with backoff
@@ -918,7 +918,7 @@ class CoordinatorGroupRebalance:
                     Errors.IllegalGenerationError):
                 # The current group is already not correct, maybe we were too
                 # slow and timeouted or a new rebalance is required.
-                pass
+                raise
             except Errors.KafkaError as err:
                 if not err.retriable:
                     raise
